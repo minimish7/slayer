@@ -1,37 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Page Title</title>
-<style>
-  body{
-    padding: 100px;
-  }
-</style>
-</head>
+  <head> 
+    <title>Project Slayer</title> 
+    <script type="text/javascript"  src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
+    <link rel="stylesheet" type="text/css" href="index.css">
+  </head> 
 <body>
-
-<h1>Firebase Web App</h1>
-
-<!--Temperature form-->
-<form action="#">
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" type="text" id="mainText">
-    <label class="mdl-textfield__label" for="sample3">Temperature</label>
-  </div>
-</form>
-
-<button onclick="submit()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-  Submit
-</button>
-<button onclick="read()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-  Read
-</button>
-<p id="readFire">Temperaturen er: </p>
-
-<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-  <div class="mdl-snackbar__text"></div>
-  <button class="mdl-snackbar__action" type="button"></button>
-</div>
+  <script type="text/javascript" src="index.js"> 
+  </script> 
+  <div id="console"></div> 
+  <script type="text/javascript", src="index2.js">
+  </script>
 
 <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
 <script>

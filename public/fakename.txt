@@ -1,0 +1,15 @@
+<span id="host">fakename@cia</span>:<span id="accent">~</span><span id="accent2">$</span> cd ProjectSlayer
+<span id="host">fakename@cia</span>:<span id="accent">ProjectSlayer</span><span id="accent2">$</span> cat MissionDetails.txt
+
+>>Welcome <span id="animate">Agent 0000000000</span>
+>>Your name: Fake name
+>>Your code name: Pyschic Tribble
+>>Your trigger word: don't kill me
+>>Your kills: 1
+<!--if kills > 0 -->
+>>Agents killed
+Agent 012415123 | Wednesday | 2007
+>> 
+>> type 'reveal mission' to continue
+<span id="host">fakename@cia</span>:<span id="accent">~</span><span id="accent2">$</span> 
+
