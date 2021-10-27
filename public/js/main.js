@@ -139,7 +139,7 @@ var main = (function () {
         REVEAL: { value: "reveal", help: configs.getInstance().reveal_help },
     };
 
-    var Terminal = function (prompt, cmdLine, output, sidenav, profilePic, user, host, root, outputTimer) {
+    var Terminal = function (prompt, cmdLine, output, sidenav, user, host, root, outputTimer) {
         if (!(prompt instanceof Node) || prompt.nodeName.toUpperCase() !== "DIV") {
             throw new InvalidArgumentException("Invalid value " + prompt + " for argument 'prompt'.");
         }
@@ -152,11 +152,7 @@ var main = (function () {
         if (!(sidenav instanceof Node) || sidenav.nodeName.toUpperCase() !== "DIV") {
             throw new InvalidArgumentException("Invalid value " + sidenav + " for argument 'sidenav'.");
         }
-        if (!(profilePic instanceof Node) || profilePic.nodeName.toUpperCase() !== "IMG") {
-            throw new InvalidArgumentException("Invalid value " + profilePic + " for argument 'profilePic'.");
-        }
         (typeof user === "string" && typeof host === "string") && (this.completePrompt = user + "@" + host + ":~" + (root ? "#" : "$"));
-        this.profilePic = profilePic;
         this.prompt = prompt;
         this.cmdLine = cmdLine;
         this.output = output;
@@ -237,7 +233,6 @@ var main = (function () {
 
     Terminal.prototype.handleSidenav = function (event) {
         if (this.sidenavOpen) {
-            this.profilePic.style.opacity = 0;
             this.sidenavElements.forEach(Terminal.makeElementDisappear);
             this.sidenav.style.width = "50px";
             document.getElementById("sidenavBtn").innerHTML = "&#9776;";
@@ -246,7 +241,6 @@ var main = (function () {
             this.sidenav.style.width = "300px";
             this.sidenavElements.forEach(Terminal.makeElementAppear);
             document.getElementById("sidenavBtn").innerHTML = "&times;";
-            this.profilePic.style.opacity = 1;
             this.sidenavOpen = true;
         }
         document.getElementById("sidenavBtn").blur();
@@ -487,7 +481,6 @@ var main = (function () {
                 document.getElementById("cmdline"),
                 document.getElementById("output"),
                 document.getElementById("sidenav"),
-                document.getElementById("profilePic"),
                 configs.getInstance().user,
                 configs.getInstance().host,
                 configs.getInstance().is_root,
