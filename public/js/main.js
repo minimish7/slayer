@@ -29,6 +29,7 @@ var configs = (function () {
         touch_help: "Change file timestamps. If the file doesn't exist, it's created an empty one.",
         sudo_help: "Execute a command as the superuser.",
         reveal_help: "Get your latest mission objective",
+        slay_help: "Complete your mission by typing 'slay <target_id>",
         welcome: missionDetails,
         internet_explorer_warning: "NOTE: I see you're using internet explorer, this website won't work properly.",
         welcome_file_name: "welcome_message.txt",
@@ -39,11 +40,11 @@ var configs = (function () {
         usage: "Usage",
         file: "file",
         file_not_found: "File '<value>' not found.",
-        agentname: "Agent Name",
+        agentName: "Agent Name",
         agency: "Host",
         agentId: "Agent Id",
-        killsLabel: "kills",
-        killsListedLabel: "Agents Killed",
+        killsLabel: "Number Slayed",
+        killsListedLabel: "Agents Slayed",
         triggerWordLabel: "Trigger Word",
         platform: "Platform",
         accesible_cores: "Accessible cores",
@@ -53,6 +54,8 @@ var configs = (function () {
         user: "agentname",
         id: "000000",
         kills: "1",
+        status: "Agent Status",
+        agentState: "alive",
         triggerWord: "don't kill me",
         agentsKilled: "Agent 1111111 @ KILL_DATE",
         is_root: false,
@@ -65,9 +68,6 @@ var configs = (function () {
         }
     };
 })();
-function getMission(agentId) {
-return "your mission is to slay agent 012314. Agent Name: Fake Name 2. Agent Trigger Word: clock";
-}
 /**
  * Your files here
  */
@@ -380,12 +380,13 @@ var main = (function () {
     }
 
     Terminal.prototype.whoami = function (cmdComponents) {
-        var result = configs.getInstance().agentname + ": " + configs.getInstance().user + "\n" 
+        var result = configs.getInstance().agentName + ": " + configs.getInstance().user + "\n" 
         + configs.getInstance().agency + ": " + configs.getInstance().host + "\n" 
         + configs.getInstance().agentId + ": " + configs.getInstance().id + "\n" 
         + configs.getInstance().triggerWordLabel + ": " + configs.getInstance().triggerWord + "\n"
         + configs.getInstance().killsLabel + ": " + configs.getInstance().kills + "\n" 
         + configs.getInstance().killsListedLabel + ": " + configs.getInstance().agentsKilled + "\n" 
+        + configs.getInstance().status + ": " + configs.getInstance().agentStatus + "\n" 
         + configs.getInstance().platform + ": " + navigator.platform + "\n" 
         + configs.getInstance().accesible_cores + ": " + navigator.hardwareConcurrency + "\n" 
         + configs.getInstance().language + ": " + navigator.language;
@@ -505,3 +506,5 @@ var main = (function () {
 })();
 
 window.onload = main.listener;
+
+//get from database
