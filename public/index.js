@@ -1,15 +1,6 @@
 var mainText = document.getElementById("mainText");
 var readFire = document.getElementById("readFire");
 
-//Read from Firebase
-function read(){
-
-    var firebaseRef = firebase.database().ref('/temperature');
-    firebaseRef.once('value').then((datasnapshot) => {
-    readFire.innerText = 'The temperature is ' + datasnapshot.val() + ' degrees';
-  })
-}
-
 //Write to Firebase
 function submit(){
   if (true) {

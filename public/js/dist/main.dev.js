@@ -14,9 +14,7 @@ var configs = function () {
     }
   };
 
-  var cdProjectSlayer = "fakename@cia:~$cd ProjectSlayer\n";
-  var catMissionDetails = "fakename@cia:ProjectSlayer$cat Mission_Details.txt\n";
-  var missionDetails = ">>Welcome Agent 0000000\n >>Your name: Fake Name \n >>Your code name: Code name \n >>Your trigger word: don't kill me\n >>Your kills: 1\n >>Agents Killed\n Agent 012314 | Wednesday | 2008 \n >> \n >>Type 'reveal' to get your next mission. ";
+  var missionDetails = ">>Welcome, Agent. Thank you for stepping up to serve your country. To get started on your mission right away, type 'reveal.' You can get your own identity info at any point by typing in 'whoami'.";
   Singleton.defaultOptions = {
     general_help: "Below there's a list of commands that you can use.\nYou can use autofill by pressing the TAB key, autocompleting if there's only 1 possibility, or showing you a list of possibilities.",
     ls_help: "List information about the files and folders (the current directory by default).",
@@ -33,7 +31,8 @@ var configs = function () {
     touch_help: "Change file timestamps. If the file doesn't exist, it's created an empty one.",
     sudo_help: "Execute a command as the superuser.",
     reveal_help: "Get your latest mission objective",
-    welcome: cdProjectSlayer + catMissionDetails + missionDetails,
+    slay_help: "Complete your mission by typing 'slay <target_id>",
+    welcome: missionDetails,
     internet_explorer_warning: "NOTE: I see you're using internet explorer, this website won't work properly.",
     welcome_file_name: "welcome_message.txt",
     invalid_command_message: "<value>: command not found.",
@@ -43,14 +42,24 @@ var configs = function () {
     usage: "Usage",
     file: "file",
     file_not_found: "File '<value>' not found.",
-    username: "Username",
-    hostname: "Host",
+    agentName: "Agent Name",
+    agency: "Host",
+    agentId: "Agent Id",
+    killsLabel: "Number Slayed",
+    killsListedLabel: "Agents Slayed",
+    triggerWordLabel: "Trigger Word",
     platform: "Platform",
     accesible_cores: "Accessible cores",
     language: "Language",
     value_token: "<value>",
-    host: "example.com",
-    user: "guest",
+    host: "ProjectSlayer",
+    user: "agentname",
+    id: "000000",
+    kills: "1",
+    status: "Agent Status",
+    agentState: "alive",
+    triggerWord: "don't kill me",
+    agentsKilled: "Agent 1111111 @ KILL_DATE",
     is_root: false,
     type_delay: 20
   };
@@ -61,10 +70,6 @@ var configs = function () {
     }
   };
 }();
-
-function getMission(agentId) {
-  return "your mission is to slay agent 012314. Agent Name: Fake Name 2. Agent Trigger Word: clock";
-}
 /**
  * Your files here
  */
@@ -189,7 +194,7 @@ var main = function () {
     }
   };
 
-  var Terminal = function Terminal(prompt, cmdLine, output, sidenav, profilePic, user, host, root, outputTimer) {
+  var Terminal = function Terminal(prompt, cmdLine, output, sidenav, user, host, root, outputTimer) {
     if (!(prompt instanceof Node) || prompt.nodeName.toUpperCase() !== "DIV") {
       throw new InvalidArgumentException("Invalid value " + prompt + " for argument 'prompt'.");
     }
@@ -206,12 +211,7 @@ var main = function () {
       throw new InvalidArgumentException("Invalid value " + sidenav + " for argument 'sidenav'.");
     }
 
-    if (!(profilePic instanceof Node) || profilePic.nodeName.toUpperCase() !== "IMG") {
-      throw new InvalidArgumentException("Invalid value " + profilePic + " for argument 'profilePic'.");
-    }
-
     typeof user === "string" && typeof host === "string" && (this.completePrompt = user + "@" + host + ":~" + (root ? "#" : "$"));
-    this.profilePic = profilePic;
     this.prompt = prompt;
     this.cmdLine = cmdLine;
     this.output = output;
@@ -298,7 +298,6 @@ var main = function () {
 
   Terminal.prototype.handleSidenav = function (event) {
     if (this.sidenavOpen) {
-      this.profilePic.style.opacity = 0;
       this.sidenavElements.forEach(Terminal.makeElementDisappear);
       this.sidenav.style.width = "50px";
       document.getElementById("sidenavBtn").innerHTML = "&#9776;";
@@ -307,7 +306,6 @@ var main = function () {
       this.sidenav.style.width = "300px";
       this.sidenavElements.forEach(Terminal.makeElementAppear);
       document.getElementById("sidenavBtn").innerHTML = "&times;";
-      this.profilePic.style.opacity = 1;
       this.sidenavOpen = true;
     }
 
@@ -461,10 +459,24 @@ var main = function () {
 
   Terminal.prototype.sudo = function () {
     this.type(configs.getInstance().sudo_message, this.unlock.bind(this));
+  }; // //read from firebase
+
+
+  readFromFirebase = function readFromFirebase() {
+    console.log("in main.js");
+    var ref = firebase.database().ref("users");
+    ref.on("value", function (snapshot) {
+      var childData = snapshot.val();
+      var key = Object.keys(childData)[0]; //this will return 1st key.         
+
+      console.log(childData[key].agentName);
+      configs.getInstance().user = childData[key].agentName;
+    });
   };
 
   Terminal.prototype.whoami = function (cmdComponents) {
-    var result = configs.getInstance().username + ": " + configs.getInstance().user + "\n" + configs.getInstance().hostname + ": " + configs.getInstance().host + "\n" + configs.getInstance().platform + ": " + navigator.platform + "\n" + configs.getInstance().accesible_cores + ": " + navigator.hardwareConcurrency + "\n" + configs.getInstance().language + ": " + navigator.language;
+    this.readFromFirebase();
+    var result = configs.getInstance().agentName + ": " + configs.getInstance().user + "\n" + configs.getInstance().agency + ": " + configs.getInstance().host + "\n" + configs.getInstance().agentId + ": " + configs.getInstance().id + "\n" + configs.getInstance().triggerWordLabel + ": " + configs.getInstance().triggerWord + "\n" + configs.getInstance().killsLabel + ": " + configs.getInstance().kills + "\n" + configs.getInstance().killsListedLabel + ": " + configs.getInstance().agentsKilled + "\n" + configs.getInstance().status + ": " + configs.getInstance().agentState + "\n" + configs.getInstance().platform + ": " + navigator.platform + "\n" + configs.getInstance().accesible_cores + ": " + navigator.hardwareConcurrency + "\n" + configs.getInstance().language + ": " + navigator.language;
     this.type(result, this.unlock.bind(this));
   };
 
@@ -495,7 +507,7 @@ var main = function () {
 
   Terminal.prototype.reveal = function () {
     var result = "Your mission is to slay Agent: " + "Their trigger word is: 'clock'";
-    this.type(result, this.reset.bind(this));
+    this.type(result, this.unlock.bind(this));
   };
 
   Terminal.prototype.reset = function () {
@@ -579,9 +591,9 @@ var main = function () {
 
   return {
     listener: function listener() {
-      new Terminal(document.getElementById("prompt"), document.getElementById("cmdline"), document.getElementById("output"), document.getElementById("sidenav"), document.getElementById("profilePic"), configs.getInstance().user, configs.getInstance().host, configs.getInstance().is_root, configs.getInstance().type_delay).init();
+      new Terminal(document.getElementById("prompt"), document.getElementById("cmdline"), document.getElementById("output"), document.getElementById("sidenav"), configs.getInstance().user, configs.getInstance().host, configs.getInstance().is_root, configs.getInstance().type_delay).init();
     }
   };
 }();
 
-window.onload = main.listener;
+window.onload = main.listener; //get from database

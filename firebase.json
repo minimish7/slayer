@@ -22,13 +22,13 @@
   },
   "emulators": {
     "functions": {
-      "port": 5001
+      "port": 5002
     },
     "database": {
-      "port": 9001
+      "port": 9002
     },
     "hosting": {
-      "port": 5000
+      "port": 5005
     },
     "ui": {
       "enabled": true

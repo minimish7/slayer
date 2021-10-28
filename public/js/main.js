@@ -379,14 +379,39 @@ var main = (function () {
         this.type(configs.getInstance().sudo_message, this.unlock.bind(this));
     }
 
-    Terminal.prototype.whoami = function (cmdComponents) {
+    // get user details from firebase
+    Terminal.prototype.getAgentInfo = function (agentId) {
+        console.log("in main.js");
+        var ref = firebase.database().ref("agents");
+        ref.once("value")
+        .then(function(snapshot) {
+          snapshot.forEach(function(childSnapshot) {
+            // key will be "01397" the first time and "012i859" the second time
+            var key = childSnapshot.key;
+            if (key === agentId) {
+                // childData will be the actual contents of the child
+                var childData = childSnapshot.val();
+                console.log("got the right key", childData);
+                return childData;
+            }
+        });
+      });
+    }
+
+    Terminal.prototype.whoami = function () {
+        //agentid will be second parameter of the command
+        let thisAgentId = "013917";
+        
+        var thisAgent = this.getAgentInfo(thisAgentId); //gets agent info
+        console.log("whoami", thisAgent);
+        //second param is thisAgent.agentName
         var result = configs.getInstance().agentName + ": " + configs.getInstance().user + "\n" 
         + configs.getInstance().agency + ": " + configs.getInstance().host + "\n" 
         + configs.getInstance().agentId + ": " + configs.getInstance().id + "\n" 
         + configs.getInstance().triggerWordLabel + ": " + configs.getInstance().triggerWord + "\n"
         + configs.getInstance().killsLabel + ": " + configs.getInstance().kills + "\n" 
         + configs.getInstance().killsListedLabel + ": " + configs.getInstance().agentsKilled + "\n" 
-        + configs.getInstance().status + ": " + configs.getInstance().agentStatus + "\n" 
+        + configs.getInstance().status + ": " + configs.getInstance().agentState + "\n" 
         + configs.getInstance().platform + ": " + navigator.platform + "\n" 
         + configs.getInstance().accesible_cores + ": " + navigator.hardwareConcurrency + "\n" 
         + configs.getInstance().language + ": " + navigator.language;
